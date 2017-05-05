@@ -9,7 +9,6 @@ import main.java.domain.Tipo;
 import main.java.service.AutoService;
 import main.java.service.OpcionalService;
 import main.java.service.TipoService;
-import main.java.utils.AutoUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,15 +61,24 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.PUT)
 	@ResponseBody
-    public String putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
-		return "{op: 'PUT', id: " + id + ", 'nombre': '" + nombre + "', opcionales: '" + opcionales + "'}";
-    }
+    public Auto putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+		Tipo tipo = tipoService.findBy(nombre);
+
+		List<String> siglas = Arrays.asList(opcionales.split(","));
+		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
+		
+		Auto auto = autoService.findOne(id);
+		auto = new Auto(tipo, listaDeOpcionales);
+		auto = autoService.save(auto);
+		return auto;    
+	}
 	
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
     public String deleteAutos(@PathVariable("id") Integer id) {
-        return "{op: 'DELETE', id: " + id + "}";
+        autoService.delete(id);
+        return "{result: 'success'}";
     }
 	
 }

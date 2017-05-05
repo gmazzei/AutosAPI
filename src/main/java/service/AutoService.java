@@ -30,7 +30,7 @@ public class AutoService {
 		return autoRepository.save(auto);
 	}
 	
-	public void delete(Auto auto) {
-		autoRepository.delete(auto);
+	public void delete(Integer id) {
+		autoRepository.delete(id);
 	}
 }
