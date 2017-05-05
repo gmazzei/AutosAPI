@@ -68,8 +68,9 @@ public class AutoController {
 		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
 		
 		Auto auto = autoService.findOne(id);
-		auto = new Auto(tipo, listaDeOpcionales);
-		auto = autoService.save(auto);
+		auto.setTipo(tipo);
+		auto.setOpcionales(listaDeOpcionales);
+		auto = autoService.update(auto);
 		return auto;    
 	}
 	
