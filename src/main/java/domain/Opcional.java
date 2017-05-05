@@ -11,16 +11,16 @@ import javax.persistence.Table;
 public class Opcional {
 	
 	@Id
-	protected Integer id;
+	private Integer id;
 	
 	@Column(unique = true)
-	protected String nombre;
+	private String nombre;
 	
 	@Column(unique = true)
-	protected String sigla;
+	private String sigla;
 	
 	@Column
-	protected Double precio;
+	private Double precio;
 	
 	
 	public Integer getId() {
