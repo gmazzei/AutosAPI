@@ -13,8 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import main.java.inteface.Jsonizable;
-
 @Entity
 @Table(name = "autos")
 public class Auto {
