@@ -1,5 +1,10 @@
 package main.java.domain;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("Llantas de Aleacion")
 public class LlantasDeAleacion extends Opcional {
 	
 	public LlantasDeAleacion() {

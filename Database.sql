@@ -1,0 +1,9 @@
+CREATE TABLE autos (id INT NOT NULL AUTO_INCREMENT, tipo VARCHAR(10) NOT NULL, nombre VARCHAR(200) NOT NULL, precio DOUBLE NOT NULL, PRIMARY KEY (id) );
+
+CREATE TABLE opcionales (id INT NOT NULL AUTO_INCREMENT, tipo VARCHAR(10) NOT NULL, nombre VARCHAR(200) NOT NULL, precio DOUBLE NOT NULL, PRIMARY KEY (id) );
+
+CREATE TABLE auto_opcional (id_auto INT NOT NULL, id_opcional INT NOT NULL, PRIMARY KEY (id_auto, id_opcional) );
+
+DROP TABLE auto_opcional;
+DROP TABLE autos;
+DROP TABLE opcionales;

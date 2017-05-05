@@ -5,7 +5,9 @@ import java.util.List;
 import main.java.domain.Auto;
 import main.java.domain.Sedan;
 import main.java.service.AutoService;
+import main.java.utils.AutoUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AutoController {
 	
-	
-	private AutoService autoService = new AutoService();
+	@Autowired
+	private AutoService autoService;
 	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
@@ -38,8 +40,11 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
-    public String postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
-		return "{op: 'POST','nombre': '" + nombre + "', opcionales: '" + opcionales + "'}";
+    public Auto postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+		Auto auto = AutoUtils.crearAuto(nombre, opcionales);
+		auto = autoService.save(auto);
+		
+		return auto;
     }
 	
 	
