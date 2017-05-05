@@ -1,10 +1,14 @@
 package main.java.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import main.java.domain.Auto;
-import main.java.domain.Sedan;
+import main.java.domain.Opcional;
+import main.java.domain.Tipo;
 import main.java.service.AutoService;
+import main.java.service.OpcionalService;
+import main.java.service.TipoService;
 import main.java.utils.AutoUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,12 @@ public class AutoController {
 	@Autowired
 	private AutoService autoService;
 	
+	@Autowired
+	private OpcionalService opcionalService;
+	
+	@Autowired
+	private TipoService tipoService;
+	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
 	@ResponseBody
@@ -32,18 +42,20 @@ public class AutoController {
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.GET)
 	@ResponseBody
     public Auto getOneAutos(@PathVariable("id") Integer id) {
-		Auto auto = new Sedan();
-		auto.setId(3);
-		return auto;
+		return autoService.findOne(id);
     }
 	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
     public Auto postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
-		Auto auto = AutoUtils.crearAuto(nombre, opcionales);
-		auto = autoService.save(auto);
+		Tipo tipo = tipoService.findBy(nombre);
+
+		List<String> siglas = Arrays.asList(opcionales.split(","));
+		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
 		
+		Auto auto = new Auto(tipo, listaDeOpcionales);
+		auto = autoService.save(auto);
 		return auto;
     }
 	

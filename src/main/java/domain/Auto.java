@@ -1,41 +1,44 @@
 package main.java.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Inheritance
-@DiscriminatorColumn(name = "tipo")
 @Table(name = "autos")
-public abstract class Auto {
+public class Auto {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
+	private Integer id;
 	
-	@Column
-	protected String nombre;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "tipo_id")
+	private Tipo tipo;
 	
-	@Column
-	protected Double precio;
-	
-	@Transient
-	protected List<Opcional> opcionales; 
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "auto_opcional", joinColumns = @JoinColumn(name = "auto_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "opcional_id", referencedColumnName = "id"))
+	private List<Opcional> opcionales; 
 	
 	public Auto() {
-		this.opcionales = new ArrayList<Opcional>();
+		
 	}
 	
+	public Auto(Tipo tipo, List<Opcional> opcionales) {
+		this.tipo = tipo;
+		this.opcionales = opcionales;
+	}
+
+
 	public void agregarOpcional(Opcional opcional) {
 		opcionales.add(opcional);
 	}
@@ -49,21 +52,9 @@ public abstract class Auto {
 		this.id = id;
 	}
 
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	
-	
-	public void setPrecio(Double precio) {
-		this.precio = precio;
-	}
-	
+		
 	public Double getPrecio() {
-		Double precioTotal = this.precio;
+		Double precioTotal = this.tipo.getPrecio();
 		
 		for (Opcional unOpcional : opcionales) {
 			precioTotal += unOpcional.getPrecio();
@@ -71,7 +62,16 @@ public abstract class Auto {
 		
 		return precioTotal;
 	}
+	
+	
 
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
 
 	public List<Opcional> getOpcionales() {
 		return opcionales;

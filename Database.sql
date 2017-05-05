@@ -1,9 +1,51 @@
-CREATE TABLE autos (id INT NOT NULL AUTO_INCREMENT, tipo VARCHAR(10) NOT NULL, nombre VARCHAR(200) NOT NULL, precio DOUBLE NOT NULL, PRIMARY KEY (id) );
-
-CREATE TABLE opcionales (id INT NOT NULL AUTO_INCREMENT, tipo VARCHAR(10) NOT NULL, nombre VARCHAR(200) NOT NULL, precio DOUBLE NOT NULL, PRIMARY KEY (id) );
-
-CREATE TABLE auto_opcional (id_auto INT NOT NULL, id_opcional INT NOT NULL, PRIMARY KEY (id_auto, id_opcional) );
-
 DROP TABLE auto_opcional;
 DROP TABLE autos;
+DROP TABLE tipos;
 DROP TABLE opcionales;
+
+
+CREATE TABLE autos (
+	id INT NOT NULL AUTO_INCREMENT, 
+	tipo_id INT NOT NULL,
+	PRIMARY KEY (id) 
+);
+
+CREATE TABLE tipos (
+	id INT NOT NULL AUTO_INCREMENT, 
+	nombre VARCHAR(200) NOT NULL, 
+	precio DOUBLE NOT NULL, 
+	PRIMARY KEY (id) 
+);
+
+
+CREATE TABLE opcionales (
+	id INT NOT NULL AUTO_INCREMENT, 
+	nombre VARCHAR(200) NOT NULL UNIQUE,
+	sigla VARCHAR(10) NOT NULL UNIQUE,
+	precio DOUBLE NOT NULL, 
+	PRIMARY KEY (id) 
+);
+
+CREATE TABLE auto_opcional (
+	auto_id INT NOT NULL, 
+	opcional_id INT NOT NULL, 
+	PRIMARY KEY (auto_id, opcional_id) 
+);
+
+
+INSERT INTO tipos
+(nombre, precio)
+VALUES
+('Familiar', 245000.0),
+('Coupe', 270000.0),
+('Sedan', 230000.0);
+
+
+INSERT INTO opcionales 
+(nombre, sigla, precio)
+VALUES
+('Airbag', 'A', 7000.0),
+('Aire Acondicionado', 'AA', 20000.0),
+('Llantas de Aleacion', 'LLA', 12000.0),
+('Sistema de Frenos ABS', 'SFABS', 14000.0),
+('Techo Corredizo', 'TC', 12000.0);

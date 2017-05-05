@@ -5,23 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "opcionales")
-public class Opcional {
+@Table(name = "tipos")
+public class Tipo {
 	
 	@Id
-	protected Integer id;
+	private Integer id;
 	
 	@Column(unique = true)
-	protected String nombre;
-	
-	@Column(unique = true)
-	protected String sigla;
+	private String nombre;
 	
 	@Column
-	protected Double precio;
+	private Double precio;
 	
+		
 	
 	public Integer getId() {
 		return id;
@@ -38,21 +35,15 @@ public class Opcional {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-	public Double getPrecio() {
-		return precio;
-	}
-
+	
+	
 	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
 
-	public String getSigla() {
-		return sigla;
-	}
-
-	public void setSigla(String sigla) {
-		this.sigla = sigla;
-	}
+	public Double getPrecio() {
+		return precio;
+	}	
+	
 	
 }

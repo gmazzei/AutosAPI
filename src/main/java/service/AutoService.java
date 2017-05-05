@@ -18,15 +18,19 @@ public class AutoService {
 		return autoRepository.findAll(); 
 	}
 	
+	public Auto findOne(Integer id) {
+		return autoRepository.findOne(id);
+	}
+	
 	public Auto save(Auto auto) {
-		return auto;
+		return autoRepository.save(auto);
 	}
 	
 	public Auto update(Auto auto) {
-		return auto;
+		return autoRepository.save(auto);
 	}
 	
 	public void delete(Auto auto) {
-		
+		autoRepository.delete(auto);
 	}
 }
