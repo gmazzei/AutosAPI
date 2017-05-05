@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import main.java.inteface.Jsonizable;
+
 @Entity
 @Table(name = "autos")
 public class Auto {
@@ -38,7 +40,9 @@ public class Auto {
 		this.opcionales = opcionales;
 	}
 
-
+	
+	
+	
 	public void agregarOpcional(Opcional opcional) {
 		opcionales.add(opcional);
 	}
@@ -81,7 +85,5 @@ public class Auto {
 	public void setOpcionales(List<Opcional> opcionales) {
 		this.opcionales = opcionales;
 	}
-	
-	
 	
 }

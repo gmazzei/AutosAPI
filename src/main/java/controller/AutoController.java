@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.domain.Auto;
 import main.java.domain.Opcional;
 import main.java.domain.Tipo;
+import main.java.json.AutoSerializer;
 import main.java.service.AutoService;
 import main.java.service.OpcionalService;
 import main.java.service.TipoService;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 public class AutoController {
@@ -30,12 +34,14 @@ public class AutoController {
 	@Autowired
 	private TipoService tipoService;
 	
+	private final Gson gson = new GsonBuilder().registerTypeAdapter(Auto.class, new AutoSerializer()).create();
+	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
 	@ResponseBody
-    public List<Auto> getAutos() {
+    public String getAutos() {
 		List<Auto> autos = autoService.findAll();
-		return autos;
+		return gson.toJson(autos);
     }
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.GET)
@@ -47,7 +53,7 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
-    public Auto postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public String postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		Tipo tipo = tipoService.findBy(nombre);
 
 		List<String> siglas = Arrays.asList(opcionales.split(","));
@@ -55,13 +61,13 @@ public class AutoController {
 		
 		Auto auto = new Auto(tipo, listaDeOpcionales);
 		auto = autoService.save(auto);
-		return auto;
+		return gson.toJson(auto);
     }
 	
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.PUT)
 	@ResponseBody
-    public Auto putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public String putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		Tipo tipo = tipoService.findBy(nombre);
 
 		List<String> siglas = Arrays.asList(opcionales.split(","));
@@ -71,7 +77,7 @@ public class AutoController {
 		auto.setTipo(tipo);
 		auto.setOpcionales(listaDeOpcionales);
 		auto = autoService.update(auto);
-		return auto;    
+		return gson.toJson(auto);    
 	}
 	
 	
