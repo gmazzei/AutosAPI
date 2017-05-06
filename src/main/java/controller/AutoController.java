@@ -6,16 +6,17 @@ import java.util.List;
 import main.java.domain.Auto;
 import main.java.domain.Opcional;
 import main.java.domain.Tipo;
-import main.java.json.AutoSerializer;
+import main.java.json.AutoGson;
 import main.java.service.AutoService;
 import main.java.service.OpcionalService;
 import main.java.service.TipoService;
+import main.java.validation.AutoNoExisteException;
+import main.java.validation.ResponseJsonBuilder;
+import main.java.validation.TipoNoExisteException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Controller
 public class AutoController {
@@ -38,7 +38,7 @@ public class AutoController {
 	@Autowired
 	private TipoService tipoService;
 	
-	private final Gson gson = new GsonBuilder().registerTypeAdapter(Auto.class, new AutoSerializer()).create();
+	private final Gson gson = new AutoGson().create();
 	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
@@ -48,53 +48,67 @@ public class AutoController {
 		return ResponseEntity.ok(gson.toJson(autos));
     }
 	
+	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.GET)
 	@ResponseBody
-    public Auto getOneAutos(@PathVariable("id") Integer id) {
-		return autoService.findOne(id);
+    public ResponseEntity<String> getOneAutos(@PathVariable("id") Integer id) {
+		try {
+			Auto auto = autoService.findOne(id);
+			validarId(auto, id);
+			return ResponseEntity.ok(gson.toJson(auto));
+		} catch (AutoNoExisteException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
+		}
+		
+		
     }
 	
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
     public ResponseEntity<String> postAutos(@RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
-		Tipo tipo = tipoService.findBy(nombre);
 		
-		if (tipo == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No hay variantes con el nombre " + nombre + "'}");
+		try {
+			Tipo tipo = tipoService.findBy(nombre);
+			validarTipo(tipo, nombre);
+			
+			List<String> siglas = Arrays.asList(opcionales.split(","));
+			List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
+			
+			Auto auto = new Auto(tipo, listaDeOpcionales);
+			auto = autoService.save(auto);
+			return ResponseEntity.ok(gson.toJson(auto));
+		} catch (TipoNoExisteException ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseJsonBuilder.build(400, ex.getMessage()));
 		}
 		
-		List<String> siglas = Arrays.asList(opcionales.split(","));
-		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
-		
-		Auto auto = new Auto(tipo, listaDeOpcionales);
-		auto = autoService.save(auto);
-		return ResponseEntity.ok(gson.toJson(auto));
     }
 	
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.PUT)
 	@ResponseBody
     public ResponseEntity<String> putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
-		Tipo tipo = tipoService.findBy(nombre);
-		
-		if (tipo == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No hay variantes con el nombre " + nombre + "'}");
+		try {
+			Auto auto = autoService.findOne(id);
+			validarId(auto, id);
+			
+			Tipo tipo = tipoService.findBy(nombre);
+			validarTipo(tipo, nombre);
+			auto.setTipo(tipo);
+			
+			List<String> siglas = Arrays.asList(opcionales.split(","));
+			List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
+			auto.setOpcionales(listaDeOpcionales);
+			
+			auto = autoService.update(auto);
+			return ResponseEntity.ok(gson.toJson(auto));
+			
+		} catch (TipoNoExisteException ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseJsonBuilder.build(400, ex.getMessage()));
+		} catch (AutoNoExisteException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
 		}
-		
-		List<String> siglas = Arrays.asList(opcionales.split(","));
-		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
-		
-		Auto auto = autoService.findOne(id);
-		
-		if (auto == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No existe auto con el id " + id + "'}");
-		}
-		
-		auto.setTipo(tipo);
-		auto.setOpcionales(listaDeOpcionales);
-		auto = autoService.update(auto);
-		return ResponseEntity.ok(gson.toJson(auto));    
+		    
 	}
 	
 	
@@ -102,11 +116,21 @@ public class AutoController {
 	@ResponseBody
     public ResponseEntity<String> deleteAutos(@PathVariable("id") Integer id) {
 		try {
-			autoService.delete(id);
-	        return ResponseEntity.ok("{code: 200, message: 'success' }");
-		} catch (EmptyResultDataAccessException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No existe auto con el id " + id + "'}");
+			Auto auto = autoService.findOne(id);
+			validarId(auto, id);
+			autoService.delete(auto);
+	        return ResponseEntity.ok(ResponseJsonBuilder.build(200, "success"));
+		} catch (AutoNoExisteException ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
 		}
     }
+	
+	private void validarTipo(Tipo tipo, String nombre) {
+		if (tipo == null) throw new TipoNoExisteException(nombre);
+	}
+	
+	private void validarId(Auto auto, Integer id) {
+		if (auto == null) throw new AutoNoExisteException(id);
+	}
 	
 }
