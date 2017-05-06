@@ -57,7 +57,8 @@ public class AutoController {
 			validarId(auto, id);
 			return ResponseEntity.ok(gson.toJson(auto));
 		} catch (AutoNoExisteException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
+			HttpStatus status = HttpStatus.NOT_FOUND;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
 		
 		
@@ -79,7 +80,8 @@ public class AutoController {
 			auto = autoService.save(auto);
 			return ResponseEntity.ok(gson.toJson(auto));
 		} catch (TipoNoExisteException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseJsonBuilder.build(400, ex.getMessage()));
+			HttpStatus status = HttpStatus.BAD_REQUEST;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
 		
     }
@@ -104,9 +106,11 @@ public class AutoController {
 			return ResponseEntity.ok(gson.toJson(auto));
 			
 		} catch (TipoNoExisteException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseJsonBuilder.build(400, ex.getMessage()));
+			HttpStatus status = HttpStatus.BAD_REQUEST;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		} catch (AutoNoExisteException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
+			HttpStatus status = HttpStatus.NOT_FOUND;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
 		    
 	}
@@ -121,7 +125,8 @@ public class AutoController {
 			autoService.delete(auto);
 	        return ResponseEntity.ok(ResponseJsonBuilder.build(200, "success"));
 		} catch (AutoNoExisteException ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseJsonBuilder.build(404, ex.getMessage()));
+			HttpStatus status = HttpStatus.NOT_FOUND;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
     }
 	
