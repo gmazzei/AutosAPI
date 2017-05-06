@@ -12,6 +12,10 @@ import main.java.service.OpcionalService;
 import main.java.service.TipoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +43,9 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
 	@ResponseBody
-    public String getAutos() {
+    public ResponseEntity<String> getAutos() {
 		List<Auto> autos = autoService.findAll();
-		return gson.toJson(autos);
+		return ResponseEntity.ok(gson.toJson(autos));
     }
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.GET)
@@ -53,39 +57,56 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
-    public String postAutos(@RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public ResponseEntity<String> postAutos(@RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		Tipo tipo = tipoService.findBy(nombre);
-
+		
+		if (tipo == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No hay variantes con el nombre " + nombre + "'}");
+		}
+		
 		List<String> siglas = Arrays.asList(opcionales.split(","));
 		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
 		
 		Auto auto = new Auto(tipo, listaDeOpcionales);
 		auto = autoService.save(auto);
-		return gson.toJson(auto);
+		return ResponseEntity.ok(gson.toJson(auto));
     }
 	
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.PUT)
 	@ResponseBody
-    public String putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre") String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public ResponseEntity<String> putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		Tipo tipo = tipoService.findBy(nombre);
-
+		
+		if (tipo == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No hay variantes con el nombre " + nombre + "'}");
+		}
+		
 		List<String> siglas = Arrays.asList(opcionales.split(","));
 		List<Opcional> listaDeOpcionales = opcionalService.findBySiglaIn(siglas);
 		
 		Auto auto = autoService.findOne(id);
+		
+		if (auto == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No existe auto con el id " + id + "'}");
+		}
+		
 		auto.setTipo(tipo);
 		auto.setOpcionales(listaDeOpcionales);
 		auto = autoService.update(auto);
-		return gson.toJson(auto);    
+		return ResponseEntity.ok(gson.toJson(auto));    
 	}
 	
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-    public String deleteAutos(@PathVariable("id") Integer id) {
-        autoService.delete(id);
-        return "{result: 'success'}";
+    public ResponseEntity<String> deleteAutos(@PathVariable("id") Integer id) {
+		try {
+			autoService.delete(id);
+	        return ResponseEntity.ok("{code: 200, message: 'success' }");
+		} catch (EmptyResultDataAccessException ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{code: 400, message: 'No existe auto con el id " + id + "'}");
+		}
     }
 	
 }
