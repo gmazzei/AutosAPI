@@ -1,5 +1,7 @@
 package main.java.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,10 +42,9 @@ public class AutoController {
 	
 	private final Gson gson = new AutoGson().create();
 	
-	
 	@RequestMapping(value = "/autos", method = RequestMethod.GET)
 	@ResponseBody
-    public ResponseEntity<String> getAutos() {
+    public ResponseEntity<String> get() {
 		List<Auto> autos = autoService.findAll();
 		return ResponseEntity.ok(gson.toJson(autos));
     }
@@ -51,7 +52,7 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.GET)
 	@ResponseBody
-    public ResponseEntity<String> getOneAutos(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> get(@PathVariable("id") Integer id) {
 		try {
 			Auto auto = autoService.findOne(id);
 			validarId(auto, id);
@@ -67,7 +68,7 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos", method = RequestMethod.POST)
 	@ResponseBody
-    public ResponseEntity<String> postAutos(@RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public ResponseEntity<String> post(@RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		
 		try {
 			Tipo tipo = tipoService.findBy(nombre);
@@ -78,9 +79,12 @@ public class AutoController {
 			
 			Auto auto = new Auto(tipo, listaDeOpcionales);
 			auto = autoService.save(auto);
-			return ResponseEntity.ok(gson.toJson(auto));
+			return ResponseEntity.created(createURI(auto.getId())).body(gson.toJson(auto));
 		} catch (TipoNoExisteException ex) {
 			HttpStatus status = HttpStatus.BAD_REQUEST;
+			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
+		} catch (URISyntaxException ex) {
+			HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
 		
@@ -89,7 +93,7 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.PUT)
 	@ResponseBody
-    public ResponseEntity<String> putAutos(@PathVariable("id") Integer id, @RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
+    public ResponseEntity<String> put(@PathVariable("id") Integer id, @RequestParam(value = "nombre", required = true) String nombre, @RequestParam(value = "opcionales", defaultValue = "") String opcionales) {
 		try {
 			Auto auto = autoService.findOne(id);
 			validarId(auto, id);
@@ -104,7 +108,7 @@ public class AutoController {
 			
 			auto = autoService.update(auto);
 			return ResponseEntity.ok(gson.toJson(auto));
-			
+
 		} catch (TipoNoExisteException ex) {
 			HttpStatus status = HttpStatus.BAD_REQUEST;
 			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
@@ -118,17 +122,18 @@ public class AutoController {
 	
 	@RequestMapping(value = "/autos/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-    public ResponseEntity<String> deleteAutos(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
 		try {
 			Auto auto = autoService.findOne(id);
 			validarId(auto, id);
 			autoService.delete(auto);
-	        return ResponseEntity.ok(ResponseJsonBuilder.build(200, "success"));
+	        return ResponseEntity.noContent().build();
 		} catch (AutoNoExisteException ex) {
 			HttpStatus status = HttpStatus.NOT_FOUND;
 			return ResponseEntity.status(status).body(ResponseJsonBuilder.build(status.value(), ex.getMessage()));
 		}
     }
+	
 	
 	private void validarTipo(Tipo tipo, String nombre) {
 		if (tipo == null) throw new TipoNoExisteException(nombre);
@@ -138,4 +143,7 @@ public class AutoController {
 		if (auto == null) throw new AutoNoExisteException(id);
 	}
 	
+	private URI createURI(Integer id) throws URISyntaxException {
+		return new URI("/autos/" + id);
+	}
 }
