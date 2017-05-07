@@ -12,7 +12,7 @@ API REST de autos.
 </ul>
 <br/>
 
-## Instrucciónes de instalación
+## Instrucciones de instalación
 
 <p>Requisitos previos:</p>
 <ul>
