@@ -43,7 +43,7 @@ mvn clean package
 <p>3) Ir al directorio del Tomcat y copiar el war a <i>/webapps</i></p>
 <p>4) Ejecutar:</p>
 <pre>
-sh /bin/startup.sh
+sh bin/startup.sh
 </pre>
 <p>5) Ingresar a <a href="http://localhost:8080/autos">http://localhost:8080/autos</a></p>
 
