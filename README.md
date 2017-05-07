@@ -56,8 +56,13 @@ sh bin/startup.sh
 
 Ejemplo:
 <br/>
+<p>Local</p>
 <pre>
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET "http://localhost:8080/autos" 
+</pre>
+<p>Producción</p>
+<pre>
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET "http://autos-gmazzei.rhcloud.com/autos" 
 </pre>
 
 <br/>
@@ -65,8 +70,13 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET
 
 Ejemplo:
 <br/>
+<p>Local</p>
 <pre>
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET "http://localhost:8080/autos/1"
+</pre>
+<p>Producción</p>
+<pre>
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET "http://autos-gmazzei.rhcloud.com/autos/1"
 </pre>
 
 <br/>
@@ -83,9 +93,15 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET
 
 Ejemplo:
 <br/>
+<p>Local</p>
 <pre>
 curl -H "Content-Type: application/json" -X POST -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://localhost:8080/autos"
 </pre>
+<p>Producción</p>
+<pre>
+curl -H "Content-Type: application/json" -X POST -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://autos-gmazzei.rhcloud.com/autos"
+</pre>
+
 <br/>
 
 ### Modificar
@@ -100,9 +116,15 @@ curl -H "Content-Type: application/json" -X POST -d '{"nombre":"sedan", "opciona
 
 Ejemplo:
 <br/>
+<p>Local</p>
 <pre>
 curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://localhost:8080/autos/1"
 </pre>
+<p>Producción</p>
+<pre>
+curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://autos-gmazzei.rhcloud.com/autos/1"
+</pre>
+
 <br/>
 
 
@@ -110,9 +132,15 @@ curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcional
 <pre>DELETE /autos/$id   <i>#Elimina el auto con ID = $id</i></pre>
 Ejemplo:
 <br/>
+<p>Local</p>
 <pre>
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X DELETE "http://localhost:8080/autos/1"
 </pre>
+<p>Producción</p>
+<pre>
+curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://autos-gmazzei.rhcloud.com/autos/1"
+</pre>
+
 <br/>
 
 #### Siglas de los opcionales
