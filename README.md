@@ -32,6 +32,7 @@ git clone git@github.com:gmazzei/AutosAPI.git
 <p>3) Modificar la configuración de la base de datos en el archivo <a href="https://github.com/gmazzei/AutosAPI/blob/development/src/main/resources/application.properties">application.properties</a></p>
 
 <p>4) Ejecutar desde Eclipse o desplegar en un Tomcat 7.</p>
+<br/>
 
 ### Creación de WAR para Tomcat 7
 <p>1) Para crear un war, entrar en el directorio principal de la app y ejecutar:</p>
