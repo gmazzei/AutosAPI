@@ -29,7 +29,7 @@ git clone git@github.com:gmazzei/AutosAPI.git
 
 <p>2) Crear la Base de datos con el archivo <a href="https://github.com/gmazzei/AutosAPI/blob/development/Database.sql">Database.sql</a>.</p>
 
-<p>3) Modificar la configuración de la base de datos en el archivo <a href="https://github.com/gmazzei/AutosAPI/blob/development/src/main/resources/application.properties">application.properties</a></p>
+<p>3) Modificar la configuración de la base de datos en el archivo <a href="https://github.com/gmazzei/AutosAPI/blob/development/src/main/resources/application.properties#L3-L5">application.properties</a>.</p>
 
 <p>4) Ejecutar desde Eclipse o desplegar en un Tomcat 7.</p>
 <br/>
