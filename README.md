@@ -8,6 +8,7 @@ API REST de autos.
 <li>Spring Data</li>
 <li>Hibernate</li>
 <li>MySQL 5.6</li>
+<li>Maven 3</li>
 </ul>
 <br/>
 
@@ -16,6 +17,7 @@ API REST de autos.
 <p>Requisitos previos:</p>
 <ul>
 <li>JDK 1.8</li>
+<li>Maven 3</li>
 <li>MySQL 5.6</li>
 </ul>
 </br>
@@ -29,7 +31,21 @@ git clone git@github.com:gmazzei/AutosAPI.git
 
 <p>3) Modificar la configuración de la base de datos en el archivo <a href="https://github.com/gmazzei/AutosAPI/blob/development/src/main/resources/application.properties">application.properties</a></p>
 
-<p>4) Ejecutar desde Eclipse o deployar en un Application Server.</p>
+<p>4) Ejecutar desde Eclipse o desplegar en un Tomcat 7.</p>
+
+### Creación de WAR para Tomcat 7
+<p>1) Para crear un war, entrar en el directorio principal de la app y ejecutar:</p>
+<pre>
+mvn clean package
+</pre>
+<p>2) Entrar en <i>target/</i> y renombrar el archivo AutosAPI-0.1.0-war a ROOT.war</p>
+<p>3) Copiar el war a <i>$directorioTomcat</i>/webapps</p>
+<p>4) Ejecutar:</p>
+<pre>
+sh /bin/startup.sh
+</pre>
+<p>5) Ingresar a <a href="http://localhost:8080/autos">http://localhost:8080/autos</a></p>
+
 <br/>
 
 ## Guía de uso
