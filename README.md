@@ -55,32 +55,36 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET
 <br/>
 
 ### Crear
-<pre>/autos?nombre=$nombre&opcionales=$opcionales   <i>#Crea un nuevo auto</i></pre>
+<pre>POST /autos   <i>#Crea un nuevo auto</i></pre>
+<p>Estructura del body:</p>
+<pre>
+{
+  "nombre": "$nombre",   <i>#Obligatorio</i>
+  "opcionales": [...]   <i>#Obligatorio</i>
+}
+</pre>
 
-<p>Parámetros:</p>
-<ul>
-<li>nombre (obligatorio)</li>
-<li>opcionales: Los valores deben ir separados por comas.</li>
-</ul>
 Ejemplo:
 <br/>
 <pre>
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST "http://localhost:8080/autos?nombre=coupe&opcionales=AA,A,SFABS,TC,LLA"
+curl -H "Content-Type: application/json" -X POST -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://localhost:8080/autos"
 </pre>
 <br/>
 
 ### Modificar
-<pre>PUT /autos/$id?nombre=$nombre&opcionales=$opcionales   <i>#Modifica el auto con ID = $id</i></pre>
+<pre>PUT /autos/$id   <i>#Modifica el auto con ID = $id</i></pre>
+<p>Estructura del body:</p>
+<pre> 
+{
+  "nombre": "$nombre",   <i>#Obligatorio</i>
+  "opcionales": [...]   <i>#Obligatorio</i>
+}
+</pre>
 
-<p>Parámetros:</p>
-<ul>
-<li>nombre (obligatorio)</li>
-<li>opcionales: Los valores deben ir separados por comas.</li>
-</ul>
 Ejemplo:
 <br/>
 <pre>
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X PUT "http://localhost:8080/autos/1?nombre=coupe&opcionales=AA,A,SFABS,TC,LLA"
+curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://localhost:8080/autos/1"
 </pre>
 <br/>
 
