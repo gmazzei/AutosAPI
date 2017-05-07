@@ -44,8 +44,8 @@ VALUES
 INSERT INTO opcionales 
 (nombre, sigla, precio)
 VALUES
-('Airbag', 'A', 7000.0),
+('Airbag', 'AR', 7000.0),
 ('Aire Acondicionado', 'AA', 20000.0),
-('Llantas de Aleacion', 'LLA', 12000.0),
-('Sistema de Frenos ABS', 'SFABS', 14000.0),
+('Llantas de Aleacion', 'LL', 12000.0),
+('Sistema de Frenos ABS', 'ABS', 14000.0),
 ('Techo Corredizo', 'TC', 12000.0);
