@@ -54,7 +54,7 @@ sh bin/startup.sh
 ### Consultas
 <pre>GET /autos   <i>#Obtiene la colección completa</i></pre>
 
-Ejemplo:
+#### Ejemplos
 <br/>
 <p>Local</p>
 <pre>
@@ -68,7 +68,7 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET
 <br/>
 <pre>GET /autos/$id   <i>#Obtiene el auto cuyo ID = $id</i></pre>
 
-Ejemplo:
+#### Ejemplos
 <br/>
 <p>Local</p>
 <pre>
@@ -91,7 +91,7 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET
 }
 </pre>
 
-Ejemplo:
+#### Ejemplos
 <br/>
 <p>Local</p>
 <pre>
@@ -114,7 +114,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"nombre":"sedan", "opciona
 }
 </pre>
 
-Ejemplo:
+#### Ejemplos
 <br/>
 <p>Local</p>
 <pre>
@@ -130,7 +130,7 @@ curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcional
 
 ### Eliminar
 <pre>DELETE /autos/$id   <i>#Elimina el auto con ID = $id</i></pre>
-Ejemplo:
+#### Ejemplos
 <br/>
 <p>Local</p>
 <pre>
@@ -138,7 +138,7 @@ curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X DEL
 </pre>
 <p>Producción</p>
 <pre>
-curl -H "Content-Type: application/json" -X PUT -d '{"nombre":"sedan", "opcionales": ["AA","A","TC","SFABS","LLA"]}' "http://autos-gmazzei.rhcloud.com/autos/1"
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X DELETE "http://autos-gmazzei.rhcloud.com/autos/1"
 </pre>
 
 <br/>
