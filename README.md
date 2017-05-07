@@ -39,8 +39,8 @@ git clone git@github.com:gmazzei/AutosAPI.git
 <pre>
 mvn clean package
 </pre>
-<p>2) Entrar en <i>target/</i> y renombrar el archivo AutosAPI-0.1.0-war a ROOT.war</p>
-<p>3) Copiar el war a <i>$directorioTomcat</i>/webapps</p>
+<p>2) Entrar en <i>target/</i> y renombrar el archivo AutosAPI-0.1.0.war a ROOT.war</p>
+<p>3) Ir al directorio del Tomcat y copiar el war a <i>/webapps</i></p>
 <p>4) Ejecutar:</p>
 <pre>
 sh /bin/startup.sh
