@@ -1,7 +1,7 @@
-DROP TABLE auto_opcional;
-DROP TABLE autos;
-DROP TABLE tipos;
-DROP TABLE opcionales;
+--DROP TABLE auto_opcional;
+--DROP TABLE autos;
+--DROP TABLE tipos;
+--DROP TABLE opcionales;
 
 
 CREATE TABLE autos (
